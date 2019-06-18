@@ -8,6 +8,7 @@
             size="small"
             v-model="keyWords"></el-input>
             <el-button size="small" type="primary" icon="el-icon-search" @click="searchClick">搜索</el-button>
+            <el-button style="margin-left:10px;" size="small" type="primary" icon="el-icon-plus" @click="addUserDialogShow">添加用户</el-button>
         </div>
         <div class="body-container">
             <div class="card-container" v-for="(user,index) of users" :key="user.id">
@@ -78,7 +79,7 @@
                 </el-card>                
             </div>
         </div>
-        <div class="foot-container">
+        <div v-if="total>pageSize" class="foot-container">
             <el-pagination
             background
             :page-size="pageSize"
@@ -88,12 +89,108 @@
             :page-count="7"
             :total="total"></el-pagination>
         </div>
+        <div class="dialog-container">
+            <el-dialog
+            title="添加用户"
+            :visible.sync="dialogVisible"
+            width="50%">
+                <el-form 
+                :model="userForm" 
+                ref="userForm" 
+                :rules="rules"
+                status-icon 
+                label-width="100px" 
+                label-position="right" 
+                v-loading="formLoading">
+                    <el-row>
+                        <el-col :span="7">
+                            <div>
+                                <el-form-item prop="name" label="姓名：">
+                                    <el-input prefix-icon="el-icon-edit" v-model="userForm.name" size="mini" placeholder="请输入姓名..."></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                        <el-col :span="8" :offset="1">
+                            <div>
+                                <el-form-item prop="phone" label="手机号码：">
+                                    <el-input prefix-icon="el-icon-mobile-phone" v-model="userForm.phone" size="mini" placeholder="请输入手机号码..."></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                        <el-col :span="7" :offset="1">
+                            <div>
+                                <el-form-item prop="telephone" label="电话：">
+                                    <el-input prefix-icon="el-icon-phone" v-model="userForm.telephone" size="mini" placeholder="请输入电话号码..."></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <div>
+                                <el-form-item prop="address" label="地址：">
+                                    <el-input prefix-icon="el-icon-edit" v-model="userForm.address" size="mini" placeholder="请输入地址..."></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <div>
+                                <el-form-item prop="username" label="用户名：">
+                                    <el-input prefix-icon="el-icon-edit" v-model="userForm.username" size="mini" placeholder="请输入用户名..."></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="11">
+                            <div>
+                                <el-form-item prop="password" label="密码：">
+                                    <el-input prefix-icon="el-icon-edit" v-model="userForm.password" show-password size="mini" placeholder="请输入密码..."></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                        <el-col :span="11" :offset="2">
+                            <div>
+                                <!-- 自定义校验规则，v-model 和 prop 属性必须按照这样的模式来写，有变化则会报错-->
+                                <el-form-item prop="checkPass" label="确认密码：">
+                                    <el-input prefix-icon="el-icon-edit" v-model="userForm.checkPass" show-password size="mini" placeholder="请再次输入密码..."></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="24">
+                            <div>
+                                <el-form-item label="描述：">
+                                    <el-input prefix-icon="el-icon-edit" v-model="userForm.remark" size="mini" placeholder="请输入描述..."></el-input>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                    </el-row>
+                </el-form>
+                <span slot="footer">
+                    <el-button size="samll" @click="cancel('userForm')">取消</el-button>
+                    <el-button size="samll" type="primary" @click="addUser('userForm')">确定</el-button>
+                </span>
+            </el-dialog>
+        </div>
     </div>
 </template>
 <script>
 export default {
     name: "SysUser",
     data() {
+        var validatePass = (rule, value, callback) => {
+            if (value === '') {
+                callback(new Error('请再次输入密码'))
+            } else if (value !== this.userForm.password) {
+                callback(new Error('请两次输入密码不一致！'))
+            } else {
+                callback()
+            }
+        }
         return {
             loading: false,
             keyWords: '',
@@ -112,7 +209,45 @@ export default {
             oldRoles: [],
             // 是否禁用“更多”按钮
             moreBtnState: false,
-            currentPage: 1
+            currentPage: 1,
+            dialogVisible: false,
+            rules: [],
+            formLoading: false,
+            userForm: {
+                name: '',
+                phone: '',
+                telephone: '',
+                address: '',
+                username: '',
+                password: '',
+                userface: '',
+                remark: '',
+                checkPass: ''
+            },
+            rules: {
+                name: [
+                    { required: true, message: '请输入姓名', trigger: 'blur' }
+                ],
+                phone: [
+                    { required: true, message: '请输入手机号码', trigger: 'blur' },
+                    { min: 11, max: 11, message: '必须为11位手机号码', trigger: 'blur' }
+                ],
+                telephone: [
+                    { required: false, message: '请输入电话号码', trigger: 'blur' },
+                ],
+                address: [
+                    { required: true, message: '请输入地址', trigger: 'blur' }
+                ],
+                username: [
+                    { required: true, message: '请输入用户名', trigger: 'blur' }
+                ],
+                password: [
+                    { required: true, message: '请输入密码', trigger: 'blur' }
+                ],
+                checkPass: [
+                    { validator: validatePass, trigger: 'blur'}
+                ]
+            }
         }
     },
     methods: {
@@ -147,16 +282,13 @@ export default {
                     })
                 }
             })
-            // this.getRequestWithParam('/system/user/' + searchWords, {
-                // pageNum: pageNum,
-                // pageSize: this.pageSize
-            // }).then(resp => {
-
-            // })
         },
     
         searchClick () {
             this.search(this.keyWords, 1)
+        },
+        addUserDialogShow () {
+            this.dialogVisible = true
         },
         initUserCards () {
             this.search(this.keyWords, 1)
@@ -266,6 +398,34 @@ export default {
         handleCurrentChange (currentPage) {
             // 因为 currentPage 已经与 this.pageNum绑定了，所以我们不用再给其赋值
             this.search(this.keyWords, currentPage)
+        },
+        cancel (formName) {
+            this.dialogVisible = false
+            this.$refs[formName].clearValidate()
+        },
+        addUser (formName) {
+            this.$refs[formName].validate(valid => {
+                if (valid) {
+                    this.formLoading = true
+                    var _this = this
+                    this.postRequest('/system/user/', {
+                        name: this.userForm.name,
+                        phone: this.userForm.phone,
+                        telephone: this.userForm.telephone,
+                        address: this.userForm.address,
+                        username: this.userForm.username,
+                        password: this.userForm.password,
+                        remark: this.userForm.remark
+                    }).then(resp => {
+                        _this.formLoading = false
+                        if(resp && resp.status == 200 && resp.data.status == 200) {
+                            _this.initUserCards()
+                            _this.dialogVisible = false
+                            _this.$refs[formName].resetFields()
+                        }
+                    })
+                }
+            })
         }
     },
     mounted() {
@@ -337,4 +497,6 @@ export default {
             display flex
             justify-content center
             margin-top 10px
+        .dialog-container
+            text-align left
 </style>

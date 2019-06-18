@@ -24,35 +24,30 @@
         <el-dialog
         title="添加菜单"
         :visible.sync="dialogVisible"
-        width="25%">
-          <el-form :model="menuForm" ref="menuForm" :rules="rules" label-position="left" v-loading="formLoading">
-            <el-form-item prop="url" class="item-container">
-              <span>url拦截规则</span>
-              <el-input class="dialog-input" size="mini" v-model="menuForm.url" placeholder="请输入url拦截规则..."></el-input>              
+        width="40%">
+          <el-form :model="menuForm" ref="menuForm" :rules="rules" label-position="top" label-width="120px" v-loading="formLoading">
+            <el-form-item prop="url" label="url拦截规则">
+              <el-input size="mini" v-model="menuForm.url" placeholder="请输入url拦截规则..."></el-input>              
             </el-form-item>
-            <el-form-item prop="name" class="item-container">
-              <span>菜单名称</span>
-              <el-input class="dialog-input" size="mini" v-model="menuForm.name" placeholder="请输入菜单名称..."></el-input>              
+            <el-form-item prop="name" label="菜单名称">
+              <el-input size="mini" v-model="menuForm.name" placeholder="请输入菜单名称..."></el-input>              
             </el-form-item>
-            <el-form-item prop="component" class="item-container">
-              <span>组件名称</span>
-              <el-input class="dialog-input" size="mini" v-model="menuForm.component" placeholder="请输入组件名称..."></el-input>              
+            <el-form-item prop="component" label="组件名称">
+              <el-input size="mini" v-model="menuForm.component" placeholder="请输入组件名称..."></el-input>              
             </el-form-item>
-            <el-form-item prop="path" class="item-container">
-              <span>组件路由path</span>
-              <el-input class="dialog-input" size="mini" v-model="menuForm.path" placeholder="请输入组件路由路径..."></el-input>
+            <el-form-item prop="path" label="组件路由path">
+              <el-input size="mini" v-model="menuForm.path" placeholder="请输入组件路由路径..."></el-input>
             </el-form-item>
-            <el-form-item class="item-container">
-              <span>菜单图标</span>
-              <el-input class="dialog-input" size="mini" v-model="menuForm.iconCls" placeholder="请输入font-awesome中对应的图表类..."></el-input>              
+            <el-form-item label="菜单图标">
+              <el-input size="mini" v-model="menuForm.iconCls" placeholder="请输入font-awesome中对应的图表类..."></el-input>              
             </el-form-item>
-            <el-form-item class="check-container">
+            <div class="check-container">
               <el-checkbox v-model="menuForm.keepAlive">长连接</el-checkbox>
               <el-checkbox v-model="menuForm.requireAuth">需要权限</el-checkbox>
-            </el-form-item>
+            </div>
           </el-form>
-          <span slot="footer" class="dialog-footer">
-            <el-button size="samll" @click="dialogVisible = false">取消</el-button>
+          <span slot="footer">
+            <el-button size="samll" @click="cancelAddMenu('menuForm')">取消</el-button>
             <el-button size="samll" type="primary" @click="addMenu('menuForm')">确定</el-button>
           </span>
         </el-dialog>
@@ -229,6 +224,10 @@
             return false
           }
         })
+      },
+      cancelAddMenu (formName) {
+        this.dialogVisible = false
+        this.$refs[formName].clearValidate()
       }
     }
   };
@@ -245,16 +244,8 @@
     margin-top 10px
   .dialog-container
     text-align left
-    .item-container
-      margin-bottom 10px
-      .dialog-input
-        width 340px
-        float right
     .check-container
       display flex
       justify-content center
-      margin-bottom 0
-    .dialog-footer
-      margin-top 0
-
+      margin-top 10px
 </style>
