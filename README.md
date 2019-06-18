@@ -1,39 +1,11 @@
-<<<<<<< HEAD
-# background_system
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-=======
 # background_system_front
 后台管理框架的前端部分
->>>>>>> 806537bb341d83dd2e89064bb00fce03acd2901c
+
+# 注意：
+master分支为权限管理系统的初始状态，以后不再改变，新的功能将添加到其他分支进行实现。若需要二次开发，可以只用master分支即可！
+
+# 前端和后台结合运行的办法：
+## 1.运行 npm run build，该命令执行成功之后，项目目录下生成一个dist文件夹
+## 2.在idea的项目中，在resources文件夹下新建static文件夹
+## 3.然后将dist文件夹下的内容copy到static文件夹下
+## 4.然后就可以通过 http://localhost:{port}/index.html 访问前端项目
