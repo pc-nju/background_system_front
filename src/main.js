@@ -23,6 +23,9 @@ Vue.prototype.uploadFileRequest = uploadFileRequest
 
 import {initMenu} from './utils/utils'
 
+// 引入全局过滤器
+import './utils/filter_utils'
+
 
 Vue.config.productionTip = false
 /**

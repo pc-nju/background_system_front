@@ -68,7 +68,7 @@
                                         :value="ar.id">
                                         </el-option>
                                     </el-select>
-                                    <!-- slot="reference"：触发 popover -->
+                                    <!-- slot="reference"：触发 popover（PS：DIV也可以触发） -->
                                     <el-button class="more-button" type="text" icon="el-icon-more" slot="reference" 
                                     @click="loadSelectedRoles(user.roles,index)" :disabled="moreBtnState"></el-button>
                                 </el-popover>
@@ -92,6 +92,7 @@
         <div class="dialog-container">
             <el-dialog
             title="添加用户"
+            :close-on-click-modal="false"
             :visible.sync="dialogVisible"
             width="50%">
                 <el-form 
