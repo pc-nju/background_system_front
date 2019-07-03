@@ -10,7 +10,8 @@
             </el-header>
             <el-main style="padding-top: 0px">
                 <v-body 
-                 @currentChange="handleCurrentChange"
+                @currentChange="handleCurrentChange"
+                @reRequestDatas="handleReRequestDatas"
                 :emps="emps" 
                 :total="total"></v-body>
             </el-main>
@@ -90,6 +91,9 @@ export default {
         },
         handleCurrentChange (pageNum) {
             this.pageNum = pageNum
+            this.loadEmps()
+        },
+        handleReRequestDatas () {
             this.loadEmps()
         }
     },

@@ -97,9 +97,47 @@ export default {
         handleSelectionChange (val) {
             this.multiplySelections = val
         },
-        showEditEmpView (row) {},
-        deleteEmp (row) {},
-        deleteBatchEmps () {},
+        showEditEmpView (row) {
+            VueElement.$emit('updateEmp', row)
+        },
+        deleteEmp (row) {
+            this.$confirm('此操作将永久删除[' + row.name + ']，是否继续？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+               this.doDelete(row.id) 
+            }).catch((err) => {
+                this.$message('已取消')
+            })
+        },
+        deleteBatchEmps () {
+            this.$confirm('此操作将永久删除[' + this.multiplySelections.length + ']条数据，是否继续？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+               var ids = ''
+               this.multiplySelections.forEach(emp => {
+                   ids += emp.id + ','
+               })
+               // 去掉末尾的逗号：,
+               this.doDelete(ids.slice(0, ids.length-1))
+            }).catch((err) => {
+                this.$message('已取消')
+            })
+        },
+        doDelete(ids) {
+            this.tableLoading = true
+            var _this = this
+            this.deleteRequest('/employee/basic/emps/' + ids)
+            .then(resp => {
+                _this.tableLoading = false
+                if (resp && resp.status == 200 && resp.data.status == 200) {
+                    _this.$emit('reRequestDatas')
+                }
+            })
+        },
         currentChange (currentPage) {
             this.pageNum = currentPage
             this.$emit('currentChange', this.pageNum)
