@@ -33,6 +33,7 @@
             <el-table-column align="left" label="入职日期" width="85">
                 <template slot-scope="scope">{{scope.row.beginDate | formatDate}}</template>
             </el-table-column>
+            <el-table-column prop="workState" align="left" label="在职状态" width="70" />
             <el-table-column align="left" label="合同期限" width="70">
                 <template slot-scope="scope">{{scope.row.contractTerm}}年</template>
             </el-table-column>

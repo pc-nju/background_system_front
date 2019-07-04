@@ -290,7 +290,7 @@
                         </el-col>
                     </el-row>
                     <el-row>
-                        <el-col :span="8">
+                        <el-col :span="6">
                             <div>
                                 <el-form-item label="身份证号码:" prop="idCard">
                                     <el-input prefix-icon="el-icon-edit" v-model="emp.idCard" size="mini" style="width: 200px" 
@@ -298,23 +298,33 @@
                                 </el-form-item>
                             </div>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="5">
                             <div>
                                 <el-form-item label="聘用形式:" prop="engageForm">
                                     <el-radio-group v-model="emp.engageForm">
                                         <el-radio label="劳动合同">劳动合同</el-radio>
-                                        <el-radio label="劳务合同" style="margin-left: 15px">劳务合同</el-radio>
+                                        <el-radio label="劳务合同">劳务合同</el-radio>
                                     </el-radio-group>
                                 </el-form-item>
                             </div>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="6">
+                            <div>
+                                <el-form-item label="在职状态:" prop="workState">
+                                    <el-radio-group v-model="emp.workState">
+                                        <el-radio label="在职">在职</el-radio>
+                                        <el-radio label="离职">离职</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+                        <el-col :span="7">
                             <div>
                                 <el-form-item label="婚姻状况:" prop="wedlock">
                                     <el-radio-group v-model="emp.wedlock">
                                         <el-radio label="已婚">已婚</el-radio>
-                                        <el-radio label="未婚" style="margin-left: 15px">未婚</el-radio>
-                                        <el-radio label="离异" style="margin-left: 15px">离异</el-radio>
+                                        <el-radio label="未婚">未婚</el-radio>
+                                        <el-radio label="离异">离异</el-radio>
                                     </el-radio-group>
                                 </el-form-item>
                             </div>
@@ -407,6 +417,7 @@ export default {
                     }
                 ],
                 engageForm: [{required: true, message: '必填：聘用形式', trigger: 'blur'}],
+                workState: [{required: true, message: '必填：在职状态', trigger: 'blur'}],
                 wedlock: [{required: true, message: '必填：婚姻状况', trigger: 'blur'}]
             },
             dialogTitle: '',
@@ -575,7 +586,6 @@ export default {
      */
     created() {
         VueElement.$on('updateEmp', data => {
-            console.log(data)
             this.emp = data
             this.dialogVisible = true
         })        
