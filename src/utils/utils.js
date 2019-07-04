@@ -52,6 +52,8 @@ export const formatRoutes = routes => {
                     require(['../pages/statistics/' + component + '.vue'], resolve)
                 } else if (component.startsWith("Sys")) {
                     require(['../pages/system/' + component + '.vue'], resolve)
+                } else if (component.startsWith("Class")) {
+                    require(['../pages/class/' + component + '.vue'], resolve)
                 }
             },
             name: name,
