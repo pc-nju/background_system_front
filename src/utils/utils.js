@@ -42,14 +42,6 @@ export const formatRoutes = routes => {
             component (resolve) {
                 if (component.startsWith("Home")) {
                     require(['../pages/home/' + component + '.vue'], resolve)
-                } else if (component.startsWith("Emp")) {
-                    require(['../pages/emp/' + component + '.vue'], resolve)
-                } else if (component.startsWith("Per")) {
-                    require(['../pages/personnel/' + component + '.vue'], resolve)
-                } else if (component.startsWith("Sal")) {
-                    require(['../pages/salary/' + component + '.vue'], resolve)
-                } else if (component.startsWith("Sta")) {
-                    require(['../pages/statistics/' + component + '.vue'], resolve)
                 } else if (component.startsWith("Sys")) {
                     require(['../pages/system/' + component + '.vue'], resolve)
                 } else if (component.startsWith("Class")) {
@@ -76,4 +68,13 @@ export const isNotNullOrBlank = (...args) => {
         }
     })
     return true
+}
+
+export const formatTime = date => {
+    var year = date.getFullYear()
+    var month = date.getMonth() + 1
+    month = month < 10 ? ('0' + month) : month
+    var day = date.getDate()
+    day = day < 10 ? ('0' + day) : day  
+    return year + '-' + month + '-' + day  
 }

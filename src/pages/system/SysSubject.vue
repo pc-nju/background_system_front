@@ -1,11 +1,11 @@
 <template>
     <div>
-        高级资料
+        科目设置
     </div>
 </template>
 <script>
 export default {
-    name: "EmpAdv"
+    name: "SysSubject"
 }
 </script>
 <style lang="stylus" scoped>

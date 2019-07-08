@@ -1,11 +1,11 @@
 <template>
     <div>
-        工资账套设置
+        时间段设置
     </div>
 </template>
 <script>
 export default {
-    name: "SalSobCfg"
+    name: "SysPeriod"
 }
 </script>
 <style lang="stylus" scoped>

@@ -21,8 +21,8 @@ Vue.prototype.deleteRequest = deleteRequest
 Vue.prototype.putRequest = putRequest
 Vue.prototype.uploadFileRequest = uploadFileRequest
 
-import {initMenu} from './utils/utils'
-
+import {initMenu, formatTime} from './utils/utils'
+Vue.prototype.formatTime = formatTime
 
 Vue.config.productionTip = false
 /**
