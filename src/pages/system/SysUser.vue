@@ -421,7 +421,10 @@ export default {
                         if(resp && resp.status == 200 && resp.data.status == 200) {
                             _this.initUserCards()
                             _this.dialogVisible = false
+                            // 成功以后，对表单重置，清空字段和校验结果(防止dialog还未加载完毕，就调用，报错！)
+                            if (_this.$refs[formName] !== undefined) {
                             _this.$refs[formName].resetFields()
+                            }
                         }
                     })
                 }
