@@ -15,7 +15,8 @@
                 <el-card class="user-card" v-loading="cardLoadings[index]">
                     <div slot="header" class="clearfix">
                         <span>{{user.name}}</span>
-                        <el-button class="delete-button" type="text" icon="el-icon-delete" @click="deleteUser(user.id)"></el-button>
+                        <el-button class="button" type="text" icon="el-icon-delete" @click="deleteUser(user.id)"></el-button>
+                        <el-button class="button" type="text" icon="el-icon-edit" @click="showUpdateUserView(user)" style="margin-right: 10px"></el-button>
                     </div>
                     <div>
                         <div class="img-container">
@@ -91,7 +92,7 @@
         </div>
         <div class="dialog-container">
             <el-dialog
-            title="添加用户"
+            :title="dialogTitle"
             :visible.sync="dialogVisible"
             width="50%">
                 <el-form 
@@ -172,7 +173,7 @@
                 </el-form>
                 <span slot="footer">
                     <el-button size="samll" @click="cancel('userForm')">取消</el-button>
-                    <el-button size="samll" type="primary" @click="addUser('userForm')">确定</el-button>
+                    <el-button size="samll" type="primary" @click="editUser('userForm')">确定</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -211,6 +212,7 @@ export default {
             moreBtnState: false,
             currentPage: 1,
             dialogVisible: false,
+            dialogTitle: '',
             rules: [],
             formLoading: false,
             userForm: {
@@ -242,7 +244,7 @@ export default {
                     { required: true, message: '请输入用户名', trigger: 'blur' }
                 ],
                 password: [
-                    { required: true, message: '请输入密码', trigger: 'blur' }
+                    { required: false, message: '请输入密码', trigger: 'blur' }
                 ],
                 checkPass: [
                     { validator: validatePass, trigger: 'blur'}
@@ -289,6 +291,7 @@ export default {
         },
         addUserDialogShow () {
             this.dialogVisible = true
+            this.dialogTitle = '新增用户'
         },
         initUserCards () {
             this.search(this.keyWords, 1)
@@ -301,6 +304,11 @@ export default {
                     _this.allRoles = resp.data.obj
                 }
             })
+        },
+        showUpdateUserView (user) {
+            this.userForm = user
+            this.dialogVisible = true
+            this.dialogTitle = '更新用户'
         },
         deleteUser (userId) {
             var _this = this
@@ -401,34 +409,53 @@ export default {
         },
         cancel (formName) {
             this.dialogVisible = false
-            this.$refs[formName].clearValidate()
         },
-        addUser (formName) {
+        editUser (formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     this.formLoading = true
                     var _this = this
-                    this.postRequest('/system/user/', {
-                        name: this.userForm.name,
-                        phone: this.userForm.phone,
-                        telephone: this.userForm.telephone,
-                        address: this.userForm.address,
-                        username: this.userForm.username,
-                        password: this.userForm.password,
-                        remark: this.userForm.remark
-                    }).then(resp => {
-                        _this.formLoading = false
-                        if(resp && resp.status == 200 && resp.data.status == 200) {
-                            _this.initUserCards()
-                            _this.dialogVisible = false
-                            // 成功以后，对表单重置，清空字段和校验结果(防止dialog还未加载完毕，就调用，报错！)
-                            if (_this.$refs[formName] !== undefined) {
-                            _this.$refs[formName].resetFields()
-                            }
-                        }
-                    })
+                    if (this.userForm.id) {
+                        this.putRequest('/system/user/', this.userForm)
+                        .then(resp => {
+                            _this.handleResponse(_this, resp, formName)
+                        })
+                    } else {
+                        this.postRequest('/system/user/', this.userForm)
+                        .then(resp => {
+                            _this.handleResponse(_this, resp, formName)
+                        })
+                    }
+                } else {
+                    return false
                 }
             })
+        },
+        handleResponse (context, resp, formName) {
+            context.formLoading = false
+            if(resp && resp.status == 200 && resp.data.status == 200) {
+                context.initUserCards()
+                context.dialogVisible = false
+                
+                // 成功以后，对表单重置，清空字段和校验结果(防止dialog还未加载完毕，就调用，报错！)
+                if (context.$refs[formName] !== undefined) {
+                    context.$refs[formName].resetFields()
+                }
+                context.emptyUser()
+            }
+        },
+        emptyUser () {
+            this.userForm = {
+                name: '',
+                phone: '',
+                telephone: '',
+                address: '',
+                username: '',
+                password: '',
+                userface: '',
+                remark: '',
+                checkPass: ''
+            }
         }
     },
     mounted() {
@@ -462,7 +489,7 @@ export default {
                 .user-card
                     width 350px
                     margin-bottom 20px
-                    .delete-button
+                    .button
                         float right
                         padding 3px 0
                         margin 0
