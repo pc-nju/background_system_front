@@ -217,7 +217,9 @@
                 this.currentNodeData.children.push(newMenu)
 
                 // 成功以后，对表单重置，清空字段和校验结果
-                _this.$refs[formName].resetFields()
+                if (_this.$refs[formName] !== undefined) {
+                  _this.$refs[formName].resetFields()
+                }
               }
             })
           } else {
