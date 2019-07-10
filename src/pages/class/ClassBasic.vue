@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="week-container">
+        <!-- <div class="week-container">
             <span style="margin-right: 20px">选择周期</span>
             <el-date-picker
             v-model="value"
@@ -10,7 +10,29 @@
             style="width: 50%"
             @change="handleTimeSelected"
             placeholder="选择周"></el-date-picker>
+        </div> -->
+        <div class="form-container">
+            <el-form ref="classForm" :rules="rules">
+                <el-form-item prop="campus" label="选择校区">
+                    <el-select v-model="campus" placeholder="请选择校区">
+                        <el-option
+                        :value=""
+                        ></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item prop="week" label="选择周期">
+                    <el-date-picker
+                    v-model="value"
+                    type="week"
+                    format="yyyy 第 WW 周"
+                    size="small"
+                    class="input-style"
+                    @change="handleTimeSelected"
+                    placeholder="选择周"></el-date-picker>
+                </el-form-item>
+            </el-form>
         </div>
+
         <el-table
         class="class-container"
         :data="plans"
@@ -37,6 +59,14 @@ export default {
     name: 'ClassBasic',
     data() {
         return {
+            campus: [],
+            subjects: [],
+            periods: [],
+            rules: {
+                week: [
+                    { required: true, message: '必选：周！', trigger: 'blur' }
+                ]
+            },
             plans: [
                 {period: '14:30-16:00', mon: '', tue: '', wed: '', thurs: '', fri: '', sat: '', sun: ''},
                 {period: '16:00-17:30', mon: '', tue: '', wed: '', thurs: '', fri: '', sat: '', sun: ''},
@@ -48,6 +78,37 @@ export default {
         }
     },
     methods: {
+        loadDatas () {
+            var _this = this
+            this.getRequest('/class/basic/datas')
+            .then(resp => {
+                if (resp && resp.status == 200 && resp.data.status == 200) {
+                    var data = resp.data.obj
+                    _this.campus = data.campus
+                    _this.subjects = data.subjects
+                    _this.periods = data.periods
+                    _this.constructPlans()
+                }
+            })
+        },
+        constructPlans () {
+            this.plans = []
+            for (let i = 0; i < this.periods.length; i++) {
+                this.plans.push(this.initPlan(this.periods[i]))
+            }
+        },
+        initPlan (period) {
+            return {
+                period: period.name,
+                mon: '', 
+                tue: '', 
+                wed: '', 
+                thurs: '', 
+                fri: '', 
+                sat: '', 
+                sun: ''
+            }
+        },
         handleDbClick (row, column, cell, event) {
             // 周几
             console.log(column.property)
@@ -110,12 +171,17 @@ export default {
             }
         }
     },
+    mounted() {
+        this.loadDatas()
+    },
 }
 </script>
 <style lang="stylus" scoped>
-    .week-container
+    .form-container
         margin-top 20px
-        text-align left
+        .input-style
+            float left
+            width 50%
     .class-container
         margin-top 20px
 </style>

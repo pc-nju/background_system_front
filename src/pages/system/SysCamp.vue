@@ -92,7 +92,9 @@ export default {
         },
         cancelCampus (formName) {
             this.dialogVisible = false
-            this.$refs[formName].clearValidate()
+            if (this.$refs[formName] !== undefined) {
+                this.$refs[formName].clearValidate()
+            }
         },
         addCampus (formName) {
             this.$refs[formName].validate(valid => {
@@ -107,9 +109,9 @@ export default {
                         })
                     } else {
                         // 插入
-                        this.postRequest("/system/campus", this.campus, formName)
+                        this.postRequest("/system/campus", this.campus)
                         .then(resp => {
-                            _this.handleResponse(_this, resp)
+                            _this.handleResponse(_this, resp, formName)
                         })
                     }
                 } else {
@@ -144,6 +146,7 @@ export default {
                 this.tableLoading = true
                 this.deleteRequest("/system/campus/" + campus.id)
                 .then(resp => {
+                    _this.tableLoading = false
                     if (resp && resp.status == 200 && resp.data.status == 200) {
                         _this.loadDatas()
                     }
