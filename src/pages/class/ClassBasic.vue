@@ -1,32 +1,24 @@
 <template>
     <div>
-        <!-- <div class="week-container">
-            <span style="margin-right: 20px">选择周期</span>
-            <el-date-picker
-            v-model="value"
-            type="week"
-            format="yyyy 第 WW 周"
-            size="small"
-            style="width: 50%"
-            @change="handleTimeSelected"
-            placeholder="选择周"></el-date-picker>
-        </div> -->
         <div class="form-container">
-            <el-form ref="classForm" :rules="rules">
+            <el-form :rules="rules">
                 <el-form-item prop="campus" label="选择校区">
-                    <el-select v-model="campus" placeholder="请选择校区">
+                    <el-select class="input-style" size="small" v-model="campus" placeholder="请选择校区">
                         <el-option
-                        :value=""
+                        v-for="item of campuses"
+                        :key="item.id"
+                        :value="item.id"
+                        :label="item.name"
                         ></el-option>
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="week" label="选择周期">
                     <el-date-picker
-                    v-model="value"
+                    class="input-style"
+                    v-model="selectedDate"
                     type="week"
                     format="yyyy 第 WW 周"
                     size="small"
-                    class="input-style"
                     @change="handleTimeSelected"
                     placeholder="选择周"></el-date-picker>
                 </el-form-item>
@@ -52,17 +44,77 @@
             <el-table-column prop="sat" align="center" :label="times[5]" style="width: 14%"></el-table-column>
             <el-table-column prop="sun" align="center" :label="times[6]" style="width: 14%"></el-table-column>
         </el-table>
+        <div class="dialog-container">
+            <el-dialog
+            :title="dialogTitle"
+            :visible.sync="dialogVisible"
+            width="40%">
+                <el-form ref="classForm" :rules="classRules">
+                    <el-form-item prop="subject" label="选择科目">
+                        <el-select size="small" v-model="subject" placeholder="请选择科目" style="width:85%">
+                            <el-option
+                            v-for="item of subjects"
+                            :key="item.id"
+                            :value="item.id"
+                            :label="item.name"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item prop="teacher" label="选择老师">
+                        <el-select size="small" v-model="teacher" placeholder="请选择老师" style="width:85%">
+                            <el-option
+                            v-for="item of teachers"
+                            :key="item.id"
+                            :value="item.id"
+                            :label="item.name"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item prop="startTime" label="开始时间">
+                        <el-time-picker
+                        v-model="startTime"
+                        :picker-options="{
+                            selectableRange: selectableRange
+                        }"
+                        size="small"
+                        placeholder="请选择开始时间"></el-time-picker>
+                    </el-form-item>
+                    <el-form-item prop="endTime" label="结束时间">
+                        <el-time-picker
+                        v-model="endTime"
+                        :picker-options="{
+                            selectableRange: selectableRange
+                        }"
+                        size="small"
+                        placeholder="请选择结束时间"></el-time-picker>
+                    </el-form-item>                  
+                </el-form>
+                <span slot="footer">
+                    <el-button size="samll" @click="cancel('classForm')">取消</el-button>
+                    <el-button size="samll" type="primary" @click="addClass('classForm')">确定</el-button>
+                </span>
+            </el-dialog>            
+        </div>
     </div>
 </template>
 <script>
+import { stat } from 'fs';
 export default {
     name: 'ClassBasic',
     data() {
         return {
-            campus: [],
+            campuses: [],
             subjects: [],
             periods: [],
+            teachers: [],
+            campus: '',
+            subject: '',
+            teacher: '',
+            selectedDate: '',
             rules: {
+                campus: [
+                    { required: true, message: '必选：校区！', trigger: 'blur' }
+                ],
                 week: [
                     { required: true, message: '必选：周！', trigger: 'blur' }
                 ]
@@ -72,8 +124,26 @@ export default {
                 {period: '16:00-17:30', mon: '', tue: '', wed: '', thurs: '', fri: '', sat: '', sun: ''},
                 {period: '19:30-21:00', mon: '', tue: '', wed: '', thurs: '', fri: '', sat: '', sun: ''}
             ],
+            dialogTitle: '',
+            dialogVisible: false,
+            classRules: {
+                subject: [
+                    { required: true, message: '必选：校区！', trigger: 'blur' }
+                ],
+                teacher: [
+                    { required: true, message: '必选：老师！', trigger: 'blur' }
+                ],
+                startTime: [
+                    { required: true, message: '必选：开始时间！', trigger: 'blur' }
+                ],
+                endTime: [
+                    { required: true, message: '必选：结束时间！', trigger: 'blur' }
+                ],
+            },
+            selectableRange: '',
+            startTime: '',
+            endTime: '',
             cells: [],
-            value: '',
             times: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日']
         }
     },
@@ -84,9 +154,10 @@ export default {
             .then(resp => {
                 if (resp && resp.status == 200 && resp.data.status == 200) {
                     var data = resp.data.obj
-                    _this.campus = data.campus
+                    _this.campuses = data.campuses
                     _this.subjects = data.subjects
                     _this.periods = data.periods
+                    _this.teachers = data.users
                     _this.constructPlans()
                 }
             })
@@ -110,6 +181,18 @@ export default {
             }
         },
         handleDbClick (row, column, cell, event) {
+            this.dialogVisible = true
+            this.dialogTitle = '排课'
+
+            var period = row.period
+            var periodArr = period.split('-')
+            var start = periodArr[0] + ':00'
+            var end = periodArr[1] + ':00'
+
+            this.selectableRange = start + ' - ' + end
+
+
+
             // 周几
             console.log(column.property)
             
@@ -141,7 +224,7 @@ export default {
         handleTimeSelected () {
             // 重置
             this.times = []
-            var date = new Date(this.value)
+            var date = new Date(this.selectedDate)
             this.times.push("星期一【" + this.formatTime(date) + "】")
             var temp
             for (var i=0; i<6; i++) {
@@ -169,7 +252,14 @@ export default {
                 }
                 this.times.push(temp)
             }
-        }
+        },
+        cancel (formName) {
+            this.dialogVisible = false
+            if (this.$refs[formName] !== undefined) {
+                this.$refs[formName].clearValidate()
+            }
+        },
+        addClass (formName) {}
     },
     mounted() {
         this.loadDatas()
@@ -179,9 +269,11 @@ export default {
 <style lang="stylus" scoped>
     .form-container
         margin-top 20px
+        text-align left
         .input-style
-            float left
             width 50%
     .class-container
         margin-top 20px
+    .dialog-container
+        text-align left
 </style>
