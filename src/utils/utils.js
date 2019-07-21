@@ -44,8 +44,8 @@ export const formatRoutes = routes => {
                     require(['../pages/home/' + component + '.vue'], resolve)
                 } else if (component.startsWith("Sys")) {
                     require(['../pages/system/' + component + '.vue'], resolve)
-                } else if (component.startsWith("Class")) {
-                    require(['../pages/class/' + component + '.vue'], resolve)
+                } else if (component.startsWith("Lesson")) {
+                    require(['../pages/lesson/' + component + '.vue'], resolve)
                 }
             },
             name: name,
@@ -77,4 +77,61 @@ export const formatTime = date => {
     var day = date.getDate()
     day = day < 10 ? ('0' + day) : day  
     return year + '-' + month + '-' + day  
+}
+export const showLesson = lessons => {
+    var result = ''
+    if (lessons instanceof Array && lessons.length > 0) {
+        lessons.forEach(lesson => {
+            var subjectName = lesson.subject.name
+            var teacherName = lesson.user.name 
+            var startTime = lesson.startTime
+            var endTime = lesson.endTime
+            var timeRange = translateTime2Str(startTime) + '-' + translateTime2Str(endTime)
+            result += subjectName + '<br/>' + teacherName + '<br/>' + timeRange + '<br/>'
+        })
+    }
+    return result
+}
+export const translateTime2Str = time => {
+    var hour = time[3]
+    if (hour < 10) {
+        hour = '0' + hour
+    }
+    var minute = time[4]
+    if (minute < 10) {
+        minute = '0' + minute
+    }
+    return hour + ':' + minute
+}
+export const handleTime = (date) => {
+    // 重置
+    var times = []
+    times.push("星期一【" + formatTime(date) + "】")
+    var temp
+    for (var i=0; i<6; i++) {
+        // 加 i 天
+        date.setDate(date.getDate() + 1)
+        switch (i) {
+            case 0:
+                temp = "星期二【" + formatTime(date) + "】"
+                break
+            case 1:
+                temp = "星期三【" + formatTime(date) + "】"
+                break
+            case 2:
+                temp = "星期四【" + formatTime(date) + "】"
+                break
+            case 3:
+                temp = "星期五【" + formatTime(date) + "】"
+                break
+            case 4:
+                temp = "星期六【" + formatTime(date) + "】"
+                break
+            default:
+                temp = "星期日【" + formatTime(date) + "】"
+                break
+        }
+        times.push(temp)
+    }
+    return times
 }
