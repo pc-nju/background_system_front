@@ -12,6 +12,7 @@
         border 
         fit
         @cell-dblclick="handleDbClick"
+        @cell-click="handleClick"
         :cell-style="cellStyle"
         :header-cell-style="headerCellStyle"
         style="width: 100%">
@@ -20,36 +21,43 @@
                 <el-table-column align="center" :label="lessonDto.times[0]" style="width: 14%">            
                     <template slot-scope="scope">
                         <div v-html="scope.row.mon"></div>
+                        <el-button v-if="scope.row.mon" type="text" icon="el-icon-delete" size="mini" @click="deleteLesson" />
                     </template>
                 </el-table-column>
                 <el-table-column align="center" :label="lessonDto.times[1]" style="width: 14%">   
                     <template slot-scope="scope">
                         <div v-html="scope.row.tue"></div>
+                        <el-button v-if="scope.row.tue" type="text" icon="el-icon-delete" size="mini" @click="deleteLesson" />
                     </template>
                 </el-table-column>
                 <el-table-column align="center" :label="lessonDto.times[2]" style="width: 14%">
                     <template slot-scope="scope">
                         <div v-html="scope.row.wed"></div>
+                        <el-button v-if="scope.row.wed" type="text" icon="el-icon-delete" size="mini" @click="deleteLesson" />
                     </template>
                 </el-table-column>
                 <el-table-column align="center" :label="lessonDto.times[3]" style="width: 14%">
                     <template slot-scope="scope">
                         <div v-html="scope.row.thurs"></div>
+                        <el-button v-if="scope.row.thurs" type="text" icon="el-icon-delete" size="mini" @click="deleteLesson" />
                     </template>
                 </el-table-column>
                 <el-table-column align="center" :label="lessonDto.times[4]" style="width: 14%">
                     <template slot-scope="scope">
                         <div v-html="scope.row.fri"></div>
+                        <el-button v-if="scope.row.fri" type="text" icon="el-icon-delete" size="mini" @click="deleteLesson" />
                     </template>
                 </el-table-column>
                 <el-table-column align="center" :label="lessonDto.times[5]" style="width: 14%">
                     <template slot-scope="scope">
                         <div v-html="scope.row.sat"></div>
+                        <el-button v-if="scope.row.sat" type="text" icon="el-icon-delete" size="mini" @click="deleteLesson" />
                     </template>
                 </el-table-column>
                 <el-table-column align="center" :label="lessonDto.times[6]" style="width: 14%">
                     <template slot-scope="scope">
                         <div v-html="scope.row.sun"></div>
+                        <el-button v-if="scope.row.sun" type="text" icon="el-icon-delete" size="mini" @click="deleteLesson" />
                     </template>
                 </el-table-column>
             </el-table-column>
@@ -140,7 +148,8 @@ export default {
                 startTime: '',
                 endTime: ''
             },
-            selectableRange: ''
+            selectableRange: '',
+            deleteLessonTag: false
         }
     },
     methods: {
@@ -184,13 +193,13 @@ export default {
                         }
                         this.tableVisible = true
                     } else {
+                        this.tableVisible = false
                         this.$message('暂无排课计划！')
                     }                    
                 }
             })
         },
-        handleDbClick (row, column, cell, event) {
-
+        getColumnIndex (column) {
             var colIndex = ''
             var times = this.lessonDto.times
             if (times && times instanceof Array) {
@@ -200,6 +209,11 @@ export default {
                     }
                 }
             }
+            return colIndex            
+        },
+        handleDbClick (row, column, cell, event) {
+            var colIndex = this.getColumnIndex(column)
+
             var rowIndex = this.lessonDto.plans.indexOf(row)
             // 改变当前选中单元格背景色
             this.rowIndex = rowIndex
@@ -230,6 +244,39 @@ export default {
                 this.dialogTitle = '调课'
             } else {
                 this.dialogTitle = '排课'
+            }
+        },
+        handleClick (row, column, cell, event) {
+            if (this.deleteLessonTag) {
+                var colIndex = this.getColumnIndex(column)
+                var rowIndex = this.lessonDto.plans.indexOf(row) 
+                var lessons = this.getLessons(rowIndex, colIndex)
+                if (lessons && lessons instanceof Array && lessons.length > 0) {
+                    this.$confirm('删除该[' + row.period + ']时段排课计划，是否继续？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                    }).then(() => {
+                        var ids = ''
+                        lessons.forEach(lesson => {
+                            ids += lesson.id + ','
+                        })
+                        ids = ids.slice(0, ids.length-1)
+                        this.deleteRequest('/lesson/basic/' + ids)
+                        .then(resp => {
+                            if (resp && resp.status == 200 && resp.data.status == 200) {
+                                this.searchLessons()
+                                // 重置
+                                this.deleteRequest = false
+                            }
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        })
+                    })                    
+                }               
             }
         },
         getLessons (rowIndex, columnIndex) {
@@ -336,6 +383,9 @@ export default {
                 context.emptyLesson()
                 context.resetCellStyle()
             }
+        },
+        deleteLesson () {
+            this.deleteLessonTag = true
         }
     },
     props: {
