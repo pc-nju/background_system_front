@@ -4,9 +4,9 @@ function resolve(dir) {
   return path.join(__dirname, dir);
 }
 module.exports = {
+  // css、js等静态资源打包时需放入static文件夹，配合后端，对这些资源忽略验证
+  assetsDir: 'static',
   devServer: {
-    // host: 'localhost',
-    // port: 8080,
     proxy: {
       '/': {
         target: 'http://192.168.1.2:8082', //对应自己的接口
