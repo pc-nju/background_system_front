@@ -275,8 +275,10 @@ export default {
                             type: 'info',
                             message: '已取消删除'
                         })
+                        // 重置，否则在先单击删除，取消之后，再双击修改时，仍会触发删除
+                        this.deleteLessonTag = false
                     })                    
-                }               
+                }              
             }
         },
         getLessons (rowIndex, columnIndex) {
@@ -296,7 +298,7 @@ export default {
                         tempLessons = this.lessons[rowIndex].thurs
                         break
                     case 5:
-                        tempLessons = this.this.lessons[rowIndex].fri
+                        tempLessons = this.lessons[rowIndex].fri
                         break
                     case 6:
                         tempLessons = this.lessons[rowIndex].sat
