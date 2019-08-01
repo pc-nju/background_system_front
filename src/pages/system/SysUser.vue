@@ -375,7 +375,7 @@ export default {
                 }
             }
             //若完全一致，则说明无变化，直接返回即可
-            if (this.oldRoles.length == 0) {
+            if (this.oldRoles.length == 0 && this.selectedRoles.length == this.oldRoles.length) {
                 return
             }
             // 若执行到这一步，说明有变化，执行更新
