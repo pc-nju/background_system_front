@@ -12,7 +12,6 @@
             style="width: 100%">
                 <el-table-column type="index"/>
                 <el-table-column prop="name" align="center" label="科目"/>
-                <el-table-column prop="createTime" align="center" label="创建时间"/>
                 <el-table-column fixed="right" align="center" label="操作">
                     <template slot-scope="scope">
                         <el-button @click="showEditView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini">编辑</el-button>

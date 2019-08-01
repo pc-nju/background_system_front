@@ -101,6 +101,16 @@
                             ></el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="选择教室">
+                        <el-select size="small" v-model="lesson.classroomId" placeholder="请选择教室" style="width:85%">
+                            <el-option
+                            v-for="item of classrooms"
+                            :key="item.id"
+                            :value="item.id"
+                            :label="item.name"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>                    
                     <el-form-item label="开始时间">
                         <el-time-picker
                         v-model="lesson.startTime"
@@ -122,6 +132,14 @@
                         @change="handleEndTimeSelected"
                         size="small"
                         placeholder="请选择结束时间"></el-time-picker>
+                    </el-form-item>
+                    <el-form-item label="排课方式">
+                        <el-radio-group 
+                        v-model="arrangeLessonType"
+                        @change="selectArrangeLessonType">
+                            <el-radio :label="0">单次</el-radio>
+                            <el-radio :label="1">每周循环</el-radio>
+                        </el-radio-group>
                     </el-form-item>                  
                 </el-form>
                 <span slot="footer">
@@ -143,13 +161,16 @@ export default {
             subjects: [],
             periods: [],
             teachers: [],
+            classrooms: [],
             lessonDtos: [],
             lesson: {
                 subjectId: '',
                 userId: '',
+                classroomId: '',
                 campusId: '',
                 startTime: '',
-                endTime: ''
+                endTime: '',
+                isWeekCycle: false
             },
             selectedDate: '',
             plans: [
@@ -164,7 +185,8 @@ export default {
             arrangeDate: '',
             rowIndex: -1,
             colIndex: -1,
-            selectedWeek: ''
+            selectedWeek: '',
+            arrangeLessonType: 0
         }
     },
     methods: {
@@ -178,6 +200,7 @@ export default {
                     _this.subjects = data.subjects
                     _this.periods = data.periods
                     _this.teachers = data.users
+                    _this.classrooms = data.classrooms
                     _this.constructPlans()
                 }
             })
@@ -292,6 +315,12 @@ export default {
         handleEndTimeSelected () {
             this.lesson.endTime = this.arrangeDate + ' ' + this.lesson.endTime
         },
+        selectArrangeLessonType () {
+            // 排课每周循环
+            if (this.arrangeLessonType == 1) {
+                this.lesson.isWeekCycle = true
+            }
+        },
         cancel () {
             this.dialogVisible = false
             this.resetCellStyle()
@@ -324,10 +353,12 @@ export default {
                 campusId: campusId,
                 subjectId: '',
                 userId: '',
+                classroomId: '',
                 startTime: '',
-                endTime: ''
+                endTime: '',
+                isWeekCycle: false
             }
-        },
+        }
     },
     mounted() {
         this.loadDatas()

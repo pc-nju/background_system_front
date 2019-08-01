@@ -2,10 +2,10 @@
     <div class="switch-container">
         <el-tabs v-model="defaultTab" type="card" v-loading="fullLoading">
             <el-tab-pane label="按老师调课" name="teacherSwitch">
-                <teacher-switch :campuses="campuses" :teachers="teachers"></teacher-switch>
+                <teacher-switch :campuses="campuses" :teachers="teachers" :classrooms="classrooms"></teacher-switch>
             </el-tab-pane>
             <el-tab-pane label="按课程调课" name="subjectSwitch">
-                <subject-switch :campuses="campuses" :subjects="subjects"></subject-switch>
+                <subject-switch :campuses="campuses" :subjects="subjects" :classrooms="classrooms"></subject-switch>
             </el-tab-pane>
         </el-tabs>
     </div>
@@ -22,7 +22,8 @@ export default {
             fullLoading: false,
             campuses: [],
             subjects: [],
-            teachers: []
+            teachers: [],
+            classrooms: []
         }
     },
     methods: {
@@ -36,6 +37,7 @@ export default {
                     this.campuses = data.campuses
                     this.subjects = data.subjects
                     this.teachers = data.users
+                    this.classrooms = data.classrooms
                 }
             })
         }

@@ -84,10 +84,11 @@ export const showLesson = lessons => {
         lessons.forEach(lesson => {
             var subjectName = lesson.subject.name
             var teacherName = lesson.user.name 
+            var classroomName = lesson.classroom.name
             var startTime = lesson.startTime
             var endTime = lesson.endTime
             var timeRange = translateTime2Str(startTime) + '-' + translateTime2Str(endTime)
-            result += subjectName + '<br/>' + teacherName + '<br/>' + timeRange + '<br/>'
+            result += subjectName + '<br/>' + teacherName + '<br/>' + classroomName + '<br/>' + timeRange + '<br/>'
         })
     }
     return result

@@ -32,7 +32,7 @@
                         :label="item.name"
                         ></el-option>
                     </el-select>
-                </el-form-item>                                
+                </el-form-item>                                                
             </el-form>
         </div>
         <lesson-plan 
@@ -40,6 +40,7 @@
         :selectedDate="selectedTime"
         :userId="userId + ''"
         :teachers="teachers"
+        :classrooms="classrooms"
         :teacherVisible="true"></lesson-plan>
     </div>
 </template>
@@ -62,7 +63,8 @@ export default {
     },
     props: {
         campuses: Array,
-        teachers: Array
+        teachers: Array,
+        classrooms: Array
     },
     components: {
         LessonPlan

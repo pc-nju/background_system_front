@@ -2,20 +2,20 @@
     <div>
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span>时间段数目（{{total}}条）</span>
+                <span>教室数目（{{total}}条）</span>
                 <el-button @click="showAddView()" type="primary" size="mini" style="float: right">添加</el-button>                
             </div>
             <el-table
-            :data="periods"
+            :data="classrooms"
             fit
             v-loading="tableLoading"
             style="width: 100%">
                 <el-table-column type="index"/>
-                <el-table-column prop="name" align="center" label="时间段"/>
+                <el-table-column prop="name" align="center" label="教室"/>
                 <el-table-column fixed="right" align="center" label="操作">
                     <template slot-scope="scope">
                         <el-button @click="showEditView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini">编辑</el-button>
-                        <el-button @click="deletePeriod(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px" type="danger" size="mini">删除</el-button>                    
+                        <el-button @click="deleteClassroom(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px" type="danger" size="mini">删除</el-button>                    
                     </template>
                 </el-table-column>
             </el-table>
@@ -24,35 +24,35 @@
         :title="dialogTitle"
         :visible.sync="dialogVisible"
         width="40%">
-            <el-form :model="period" ref="periodForm" :rules="rules" v-loading="formLoading">
-                <el-form-item prop="name" label="时间段名称">
-                    <el-input v-model="period.name" placeholder="请输入时间段名称，例如：14:30-16:30" style="width: 80%"></el-input>
+            <el-form :model="classroom" ref="classroomForm" :rules="rules" v-loading="formLoading">
+                <el-form-item prop="name" label="教室名称">
+                    <el-input v-model="classroom.name" placeholder="请输入教室名称" style="width: 80%"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer">
-                <el-button @click="cancelPeriod('periodForm')">取消</el-button>
-                <el-button @click="addPeriod('periodForm')" type="primary">确定</el-button>
+                <el-button @click="cancelClassroom('classroomForm')">取消</el-button>
+                <el-button @click="addClassroom('classroomForm')" type="primary">确定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 <script>
 export default {
-    name: "SysPeriod",
+    name: "SysClassroom",
     data() {
         return {
             tableLoading: false,            
             total: 0,
-            periods: [],
+            classrooms: [],
             dialogTitle: '',
             dialogVisible: false,
-            period: {
+            classroom: {
                 name: ''            
             },
             formLoading: false,
             rules: {
                 name: [
-                    { required: true, message: '必填：时间段名称！', trigger: 'blur' }
+                    { required: true, message: '必填：教室名称！', trigger: 'blur' }
                 ]
             }
         }
@@ -61,39 +61,39 @@ export default {
         loadDatas () {
             var _this = this
             this.tableLoading = true
-            this.getRequest("/system/period")
+            this.getRequest("/system/classroom")
             .then(resp => {
                 _this.tableLoading = false
                 if (resp && resp.status == 200) {
-                    _this.periods = resp.data.obj
-                    _this.total = this.periods.length
+                    _this.classrooms = resp.data.obj
+                    _this.total = this.classrooms.length
                 }
             })
         },
         showAddView () {
             this.dialogVisible = true
-            this.dialogTitle = '添加时间段'
+            this.dialogTitle = '添加教室'
         },
-        cancelPeriod (formName) {
+        cancelClassroom (formName) {
             this.dialogVisible = false
             if (this.$refs[formName] !== undefined) {
                 this.$refs[formName].clearValidate()
             }
         },
-        addPeriod (formName) {
+        addClassroom (formName) {
             this.$refs[formName].validate(valid => {
                 if (valid) {
                     var _this = this
                     this.formLoading = true
-                    if(this.period.id) {
+                    if(this.classroom.id) {
                         // 更新
-                        this.putRequest("/system/period", this.period)
+                        this.putRequest("/system/classroom", this.classroom)
                         .then(resp => {
                             _this.handleResponse(_this, resp, formName)
                         })
                     } else {
                         // 插入
-                        this.postRequest("/system/period", this.period)
+                        this.postRequest("/system/classroom", this.classroom)
                         .then(resp => {
                             _this.handleResponse(_this, resp, formName)
                         })
@@ -111,23 +111,23 @@ export default {
                 if (context.$refs[formName] !== undefined) {
                     context.$refs[formName].resetFields()
                 }
-                context.emptyPeriod()
+                context.emptyClassroom()
             }
         },
-        showEditView (period) {
+        showEditView (classroom) {
             this.dialogVisible = true
-            this.dialogTitle = '修改时间段'
-            this.period = period
+            this.dialogTitle = '修改教室'
+            this.classroom = classroom
         },
-        deletePeriod (period) {
+        deleteClassroom (classroom) {
             var _this = this
-            this.$confirm('删除[' + period.name + ']时间段，是否继续？', '提示', {
+            this.$confirm('删除[' + classroom.name + ']教室，是否继续？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
                 this.tableLoading = true
-                this.deleteRequest("/system/period/" + period.id)
+                this.deleteRequest("/system/classroom/" + classroom.id)
                 .then(resp => {
                     _this.tableLoading = false
                     if (resp && resp.status == 200 && resp.data.status == 200) {
@@ -139,8 +139,8 @@ export default {
             })
             
         },
-        emptyPeriod() {
-            this.period = {
+        emptyClassroom() {
+            this.classroom = {
                 name: ''
             }
         }

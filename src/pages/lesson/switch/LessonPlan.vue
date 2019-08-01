@@ -91,6 +91,16 @@
                             ></el-option>
                         </el-select>
                     </el-form-item>
+                    <el-form-item label="选择教室">
+                        <el-select size="small" v-model="lesson.classroomId" placeholder="请选择老师" style="width:85%">
+                            <el-option
+                            v-for="item of classrooms"
+                            :key="item.id"
+                            :value="item.id"
+                            :label="item.name"
+                            ></el-option>
+                        </el-select>
+                    </el-form-item>                    
                     <el-form-item label="上课日期">
                         <el-date-picker
                         v-model="lesson.startDate"
@@ -144,6 +154,7 @@ export default {
                 campusId: '',
                 subjectId: '',
                 userId: '',
+                classroomId: '',
                 startDate: '',
                 startTime: '',
                 endTime: ''
@@ -237,6 +248,7 @@ export default {
                     campusId: lessons[0].campusId,
                     subjectId: lessons[0].subjectId,
                     userId: lessons[0].userId,
+                    classroomId: lessons[0].classroomId,
                     startDate: lessons[0].startTime[0] + '-' + lessons[0].startTime[1] + '-' + lessons[0].startTime[2],
                     startTime: this.translateTime2Str(lessons[0].startTime),
                     endTime: this.translateTime2Str(lessons[0].endTime)
@@ -319,6 +331,7 @@ export default {
                 campusId: '',
                 subjectId: '',
                 userId: '',
+                classroomId: '',
                 startDate: '',
                 startTime: '',
                 endTime: ''                
@@ -359,6 +372,7 @@ export default {
                 campusId: this.lesson.campusId,
                 subjectId: this.lesson.subjectId,
                 userId: this.lesson.userId,
+                classroomId: this.lesson.classroomId,
                 startDate: this.lesson.startDate,
                 startTime: this.selectedDate + ' ' + this.lesson.startTime,
                 endTime: this.selectedDate + ' ' + this.lesson.endTime
@@ -393,10 +407,12 @@ export default {
     props: {
         subjects: Array,
         teachers: Array,
+        classrooms: Array,
         selectedDate: String,
         campusId: String,
         subjectId: String,
-        userId: String
+        userId: String,
+        classroomId: String
     }
 }
 </script>
