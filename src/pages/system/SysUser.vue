@@ -276,10 +276,10 @@ export default {
                     _this.total = resp.data.obj.total
                     var length = resp.data.obj.users.length
                     // 下面其实就是构造一个length长度的数组：[false, false, false...]
-                    _this.cardLoadings = Array(null, Array(length)).map(function (item, i) {
+                    _this.cardLoadings = Array.apply(null, Array(length)).map(function (item, i) {
                         return false
                     })
-                    _this.epLoadings = Array(null, Array(length)).map(function (item, i) {
+                    _this.epLoadings = Array.apply(null, Array(length)).map(function (item, i) {
                         return false
                     })
                 }
