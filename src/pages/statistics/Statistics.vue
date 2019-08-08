@@ -17,7 +17,7 @@
             :prop="item.name"
             align="center"
             sortable
-            width="150"
+            width="200"
             ></el-table-column>
         </el-table>
     </div>

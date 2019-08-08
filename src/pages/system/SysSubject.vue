@@ -12,6 +12,7 @@
             style="width: 100%">
                 <el-table-column type="index"/>
                 <el-table-column prop="name" align="center" label="科目"/>
+                <el-table-column prop="minutes" align="center" label="1课时对应时间（分钟）"/>
                 <el-table-column fixed="right" align="center" label="操作">
                     <template slot-scope="scope">
                         <el-button @click="showEditView(scope.row)" style="padding: 3px 4px 3px 4px;margin: 2px" size="mini">编辑</el-button>
@@ -23,10 +24,14 @@
         <el-dialog
         :title="dialogTitle"
         :visible.sync="dialogVisible"
+        style="text-align: left"
         width="40%">
-            <el-form :model="subject" ref="subjectForm" :rules="rules" v-loading="formLoading">
+            <el-form :model="subject" ref="subjectForm" :rules="rules" v-loading="formLoading" label-position="right" label-width="120px">
                 <el-form-item prop="name" label="科目名称">
                     <el-input v-model="subject.name" placeholder="请输入科目名称" style="width: 80%"></el-input>
+                </el-form-item>
+                <el-form-item prop="minutes" label="1课时对应时间">
+                    <el-input v-model="subject.minutes" placeholder="请输入1课时对应多少分钟" style="width: 80%"></el-input>&nbsp;&nbsp;分钟
                 </el-form-item>
             </el-form>
             <span slot="footer">
@@ -47,12 +52,16 @@ export default {
             dialogTitle: '',
             dialogVisible: false,
             subject: {
-                name: ''            
+                name: '',
+                minutes: ''            
             },
             formLoading: false,
             rules: {
                 name: [
                     { required: true, message: '必填：科目名称！', trigger: 'blur' }
+                ],
+                minutes: [
+                    { required: true, message: '必填：1课时对应多长时间！', trigger: 'blur' }
                 ]
             }
         }
