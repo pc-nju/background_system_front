@@ -48,6 +48,8 @@ export const formatRoutes = routes => {
                     require(['../pages/lesson/' + component + '.vue'], resolve)
                 } else if (component.startsWith("Statistics")) {
                     require(['../pages/statistics/' + component + '.vue'], resolve)
+                } else if (component.startsWith("Student")) {
+                    require(['../pages/student/' + component + '.vue'], resolve)
                 }
             },
             name: name,

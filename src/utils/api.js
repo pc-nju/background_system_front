@@ -138,6 +138,27 @@ export const putRequest = (url, params) => {
         }
     })
 }
+export const putRequestWithParams = (url, params) => {
+    return axios({
+        method: 'put',
+        url: `${base}${url}`,
+        params: params,
+        // `transformRequest`允许在请求数据发送到服务器之前对其进行更改
+        transformRequest: [
+            params => {
+                let result = ''
+                for(let param in params) {
+                    result += encodeURIComponent(param) + "=" + encodeURIComponent(data[param]) + "&"
+                }
+                return result
+            }
+        ],
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+}
+
 export const deleteRequest = url => {
     return axios({
         method: 'delete',

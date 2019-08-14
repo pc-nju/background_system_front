@@ -11,6 +11,7 @@ module.exports = {
     // port: 8080,
     proxy: {
       '/': {
+        // target: 'http://127.0.0.1:8082', //对应自己的接口        
         target: 'http://192.168.1.4:8082', //对应自己的接口
         changeOrigin: true,
         //如果要代理 websockets，配置这个参数（后面开发ws，改为 true）

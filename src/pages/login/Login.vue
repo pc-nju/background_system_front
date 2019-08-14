@@ -34,8 +34,8 @@ export default {
           ]
       },
       loginForm: {
-        username: "admin",
-        password: "123"
+        username: '',
+        password: ''
       },
       checked: true,
       loading: false

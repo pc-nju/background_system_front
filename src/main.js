@@ -11,7 +11,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 
 // 引入封装的请求
-import {getRequest, getRequestWithParams, postRequest, postRequestByForm, deleteRequest, putRequest, uploadFileRequest} from './utils/api'
+import {getRequest, getRequestWithParams, postRequest, postRequestByForm, deleteRequest, putRequest, 
+  putRequestWithParams, uploadFileRequest} from './utils/api'
 //注入到vue对象，在项目可直接使用
 Vue.prototype.getRequest = getRequest
 Vue.prototype.getRequestWithParams = getRequestWithParams
@@ -20,12 +21,16 @@ Vue.prototype.postRequestByForm = postRequestByForm
 Vue.prototype.deleteRequest = deleteRequest
 Vue.prototype.putRequest = putRequest
 Vue.prototype.uploadFileRequest = uploadFileRequest
+Vue.prototype.putRequestWithParams = putRequestWithParams
 
 import {initMenu, formatTime, showLesson, handleTime, translateTime2Str} from './utils/utils'
 Vue.prototype.formatTime = formatTime
 Vue.prototype.showLesson = showLesson
 Vue.prototype.handleTime = handleTime
 Vue.prototype.translateTime2Str = translateTime2Str
+
+// 引入全局过滤器
+import './utils/filter_utils'
 
 Vue.config.productionTip = false
 /**
