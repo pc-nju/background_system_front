@@ -13,6 +13,7 @@
     "core-js": "^2.6.5",
     "element-ui": "^2.9.0",
     "font-awesome": "^4.7.0",
+    "html2canvas": "^1.0.0-rc.3",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue": "^2.6.10",
