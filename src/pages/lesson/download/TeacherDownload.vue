@@ -38,9 +38,7 @@
         <plan-show 
         :campusId="campusId + ''"
         :selectedDate="selectedTime"
-        :userId="userId + ''"
-        :teachers="teachers"
-        :teacherVisible="true" />
+        :userId="userId + ''"/>
     </div>
 </template>
 <script>

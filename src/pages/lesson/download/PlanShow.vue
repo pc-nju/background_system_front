@@ -174,8 +174,6 @@ export default {
         }
     },
     props: {
-        subjects: Array,
-        teachers: Array,
         selectedDate: String,
         campusId: String,
         subjectId: String,

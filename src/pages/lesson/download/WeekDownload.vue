@@ -22,35 +22,23 @@
                     size="small"
                     @change="handleTimeSelected"
                     placeholder="选择周"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="选择科目">
-                    <el-select class="input-style" size="small" v-model="subjectId" placeholder="请选择科目">
-                        <el-option
-                        v-for="item of subjects"
-                        :key="item.id"
-                        :value="item.id"
-                        :label="item.name"
-                        ></el-option>
-                    </el-select>
-                </el-form-item>                                            
+                </el-form-item>                                                
             </el-form>
         </div>
-        <plan-show
+        <plan-show 
         :campusId="campusId + ''"
-        :selectedDate="selectedTime"
-        :subjectId="subjectId + ''"/>
+        :selectedDate="selectedTime"/>
     </div>
 </template>
 <script>
 import PlanShow from './PlanShow'
 export default {
-    name: 'SubjectSwitch',
+    name: 'WeekDownload',
     data() {
         return {
             campusId: '',
             selectedDate: '',
-            selectedTime: '',
-            subjectId: ''
+            selectedTime: ''
         }
     },
     methods: {
@@ -58,12 +46,11 @@ export default {
             this.selectedTime = this.formatTime(new Date(value))
         }
     },
+    props: {
+        campuses: Array
+    },
     components: {
         PlanShow
-    },
-    props: {
-        campuses: Array,
-        subjects: Array
     }
 }
 </script>

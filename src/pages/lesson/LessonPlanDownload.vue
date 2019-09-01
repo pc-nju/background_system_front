@@ -1,6 +1,9 @@
 <template>
     <div class="switch-container">
         <el-tabs v-model="defaultTab" type="card" v-loading="fullLoading">
+            <el-tab-pane label="按周下载" name="WeekDownload">
+                <week-download :campuses="campuses"></week-download>
+            </el-tab-pane>  
             <el-tab-pane label="按课程下载" name="SubjectDownload">
                 <subject-download :campuses="campuses" :subjects="subjects"></subject-download>
             </el-tab-pane>            
@@ -11,6 +14,7 @@
     </div>
 </template>
 <script>
+import WeekDownload from "./download/WeekDownload"
 import SubjectDownload from "./download/SubjectDownload"
 import TeacherDownload from "./download/TeacherDownload"
 
@@ -18,7 +22,7 @@ export default {
     name: 'LessonPlanDownload',
     data() {
         return {
-            defaultTab: 'SubjectDownload',
+            defaultTab: 'WeekDownload',
             fullLoading: false,
             campuses: [],
             subjects: [],
@@ -42,6 +46,7 @@ export default {
         }
     },
     components: {
+        WeekDownload,
         SubjectDownload,
         TeacherDownload
     },
