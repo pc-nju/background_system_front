@@ -2,7 +2,9 @@
     <div>
         <div class="searchContainer">
             <el-button size="mini" type="primary" @click="searchLessons">查询课表</el-button>
-            <el-button size="mini" type="danger" @click="download" v-if="tableVisible">下载课表</el-button>
+            <el-tooltip effect="dark" content="请下拉检查所有课程，否则会下载不全！" placement="top" v-if="tableVisible">
+                <el-button size="mini" type="danger" @click="download">下载课表</el-button>
+            </el-tooltip>
         </div>
         <div ref="lessonTableImg" class="table-container">
             <el-table

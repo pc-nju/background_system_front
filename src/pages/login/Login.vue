@@ -11,7 +11,7 @@
         <el-input type="text" v-model="loginForm.username" auto-complete="off" placeholder="用户名"></el-input>
       </el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码"></el-input>
+        <el-input type="password" v-model="loginForm.password" auto-complete="off" placeholder="密码" @keyup.enter.native="submitClick('loginForm')"></el-input>
       </el-form-item>
       <el-checkbox class="login-remember" v-model="checked">记住密码</el-checkbox>
       <el-form-item>
