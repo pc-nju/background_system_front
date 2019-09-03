@@ -75,7 +75,7 @@ export default {
     methods: {
         searchLessons () {
             this.tableLoading = true
-            this.getRequestWithParams('/lesson/basic', {
+            this.getRequestWithParams('/lesson/basic/download', {
                 startTime: this.selectedDate,
                 userId: this.userId,
                 subjectId: this.subjectId,
@@ -85,11 +85,9 @@ export default {
                 // 置空
                 this.lessonDto = {}
                 if (resp && resp.status == 200 && resp.data.status == 200) {
-                    var lessons = resp.data.obj
-                    if (lessons instanceof Array && lessons.length > 0) {
-                        var lesson = lessons[0]
-                        this.lessons = lesson.plans
-                        var plans = lesson.plans
+                    var lessonData = resp.data.obj
+                    if (lessonData) {
+                        var plans = lessonData.plans
                         var newPlans = []
                         if (plans instanceof Array && plans.length > 0) {
                             plans.forEach(plan => {
@@ -107,9 +105,9 @@ export default {
                             })
                         }
                         this.lessonDto = {
-                            week: lesson.week,
+                            week: lessonData.week,
                             plans: newPlans,
-                            times: this.handleTime(new Date(lesson.monday))
+                            times: this.handleTime(new Date(lessonData.monday))
                         }
                         this.tableVisible = true
                     } else {
