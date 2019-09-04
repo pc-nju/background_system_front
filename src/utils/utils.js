@@ -97,6 +97,28 @@ export const showLesson = lessons => {
     }
     return result
 }
+export const showLessonDownload = lessons => {
+    var result = ''
+    if (lessons instanceof Array && lessons.length > 0) {
+        lessons.forEach(lesson => {
+            var subjectName = lesson.subject.name
+            var teacherName = lesson.user.name 
+            var classroomName = lesson.classroom.name
+            result += subjectName + '<br/>' + teacherName + '<br/>' + classroomName + '<br/>'
+        })
+    }
+    return result
+}
+export const showLessonDownloadSimp = lessons => {
+    var result = ''
+    if (lessons instanceof Array && lessons.length > 0) {
+        lessons.forEach(lesson => {
+            var subjectName = lesson.subject.name
+            result += subjectName + '<br/>'
+        })
+    }
+    return result
+} 
 export const translateTime2Str = time => {
     var hour = time[3]
     if (hour < 10) {

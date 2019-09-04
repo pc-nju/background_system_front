@@ -23,9 +23,11 @@ Vue.prototype.putRequest = putRequest
 Vue.prototype.uploadFileRequest = uploadFileRequest
 Vue.prototype.putRequestWithParams = putRequestWithParams
 
-import {initMenu, formatTime, showLesson, handleTime, translateTime2Str} from './utils/utils'
+import {initMenu, formatTime, showLesson, showLessonDownload, showLessonDownloadSimp, handleTime, translateTime2Str} from './utils/utils'
 Vue.prototype.formatTime = formatTime
 Vue.prototype.showLesson = showLesson
+Vue.prototype.showLessonDownload = showLessonDownload
+Vue.prototype.showLessonDownloadSimp = showLessonDownloadSimp
 Vue.prototype.handleTime = handleTime
 Vue.prototype.translateTime2Str = translateTime2Str
 

@@ -11,9 +11,9 @@
             v-loading="tableLoading"
             v-if="tableVisible"
             :data="lessonDto.plans"
-            stripe
             border 
             fit
+            :row-class-name="tableRowClassName"
             :header-cell-style="headerCellStyle"
             style="width: 100%">
                 <el-table-column :label="lessonDto.week + '排课计划'" align="center">
@@ -93,15 +93,29 @@ export default {
                         var newPlans = []
                         if (plans instanceof Array && plans.length > 0) {
                             plans.forEach(plan => {
-                                var newPlan = {
-                                    period: plan.period,
-                                    mon: this.showLesson(plan.mon), 
-                                    tue: this.showLesson(plan.tue),  
-                                    wed: this.showLesson(plan.wed),  
-                                    thurs: this.showLesson(plan.thurs),  
-                                    fri: this.showLesson(plan.fri),  
-                                    sat: this.showLesson(plan.sat),  
-                                    sun: this.showLesson(plan.sun)                                        
+                                var newPlan = {}
+                                if(!this.isSimplified) {
+                                    newPlan = {
+                                        period: plan.period,
+                                        mon: this.showLessonDownload(plan.mon), 
+                                        tue: this.showLessonDownload(plan.tue),  
+                                        wed: this.showLessonDownload(plan.wed),  
+                                        thurs: this.showLessonDownload(plan.thurs),  
+                                        fri: this.showLessonDownload(plan.fri),  
+                                        sat: this.showLessonDownload(plan.sat),  
+                                        sun: this.showLessonDownload(plan.sun)                                        
+                                    }
+                                } else {
+                                    newPlan = {
+                                        period: plan.period,
+                                        mon: this.showLessonDownloadSimp(plan.mon), 
+                                        tue: this.showLessonDownloadSimp(plan.tue),  
+                                        wed: this.showLessonDownloadSimp(plan.wed),  
+                                        thurs: this.showLessonDownloadSimp(plan.thurs),  
+                                        fri: this.showLessonDownloadSimp(plan.fri),  
+                                        sat: this.showLessonDownloadSimp(plan.sat),  
+                                        sun: this.showLessonDownloadSimp(plan.sun)
+                                    }
                                 }
                                 newPlans.push(newPlan)
                             })
@@ -118,6 +132,13 @@ export default {
                     }                    
                 }
             })
+        },
+        tableRowClassName({row, rowIndex}) {
+            if(rowIndex % 2 === 1) {
+                return 'success-row'
+            } else {
+                return ''
+            }
         },
         headerCellStyle ({row, column, rowIndex, columnIndex}) {
             if (rowIndex === 0 && columnIndex === 0) {
@@ -177,11 +198,13 @@ export default {
         selectedDate: String,
         campusId: String,
         subjectId: String,
-        userId: String
+        userId: String,
+        isSimplified: Boolean
     }
 }
 </script>
 <style lang="stylus" scoped>
+    @import "~styles/css/common.css"
     .searchContainer
         width 100%
         display flex
